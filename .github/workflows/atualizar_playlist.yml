@@ -2,17 +2,18 @@ name: atualizar_playlist
 
 on:
   schedule:
-    - cron: '0 * * * *'     # roda no início de cada hora (UTC)
-  workflow_dispatch:       # permite disparo manual
+    - cron: '*/15 * * * *'     # roda a cada 15 minutos (UTC)
+  workflow_dispatch:           # permite disparo manual
 
 permissions:
-  contents: read           # só leitura do código
-  pages: write             # permissão para deploy no Pages
-  id-token: write          # necessária para deploy-pages
+  contents: read               # só leitura do código
+  pages: write                 # para deploy no Pages
+  id-token: write              # necessário para deploy-pages
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -23,16 +24,20 @@ jobs:
           python-version: '3.x'
 
       - name: Instalar dependências
-        run: |
-          pip install streamlink yt-dlp
+        run: pip install streamlink yt-dlp
 
       - name: Gerar playlist
         run: python update_playlist.py
 
+      - name: Preparar diretório para Pages
+        run: |
+          mkdir -p public
+          mv playlist.m3u public/playlist.m3u
+
       - name: Upload para Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: playlist.m3u   # aqui é fundamental que seja exatamente o nome do seu arquivo
+          path: public                # apenas diretório é aceito
 
   deploy:
     needs: build
