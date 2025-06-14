@@ -1,28 +1,47 @@
-name: Atualizar Playlist
-# Agendado para rodar todo começo de hora (UTC)
+name: atualizar_playlist
+
 on:
   schedule:
-    - cron: '0 * * * *'  # a cada 60 minutos10
+    - cron: '0 * * * *'     # roda no início de cada hora (UTC)
+  workflow_dispatch:       # permite disparo manual
 
 permissions:
-  contents: write  # permite que o workflow faça commit
+  contents: read           # só leitura do código
+  pages: write             # permissão para deploy no Pages
+  id-token: write          # necessária para deploy-pages
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: Instalar Streamlink
-        run: pip install streamlink
+
+      - name: Instalar dependências
+        run: |
+          pip install streamlink yt-dlp
+
       - name: Gerar playlist
         run: python update_playlist.py
-      - name: Commit do playlist
-        uses: stefanzweifel/git-auto-commit-action@v6
+
+      - name: Upload para Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          commit_message: 'Atualiza playlist'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: playlist.m3u   # aqui é fundamental que seja exatamente o nome do seu arquivo
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
