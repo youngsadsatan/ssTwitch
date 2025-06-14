@@ -1,0 +1,28 @@
+name: Atualizar Playlist
+# Agendado para rodar todo começo de hora (UTC)
+on:
+  schedule:
+    - cron: '0 * * * *'  # a cada 60 minutos10
+
+permissions:
+  contents: write  # permite que o workflow faça commit
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Instalar Streamlink
+        run: pip install streamlink
+      - name: Gerar playlist
+        run: python update_playlist.py
+      - name: Commit do playlist
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: 'Atualiza playlist'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
