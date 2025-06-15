@@ -1,0 +1,54 @@
+# .github/workflows/atualizar_playlist.yml
+name: atualizar_playlist
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'  # a cada 15 minutos UTC
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Instalar dependências
+        run: pip install streamlink yt-dlp
+
+      - name: Gerar playlist
+        run: python update_playlist.py
+
+      - name: Preparar diretório para GitHub Pages
+        run: |
+          mkdir -p public
+          mv playlist.m3u public/
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload para Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
