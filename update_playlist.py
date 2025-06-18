@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+from datetime import datetime
 
 STREAMERS = [
     "alanzoka",
@@ -21,6 +22,8 @@ def get_stream_url(channel: str) -> str | None:
     Tenta obter a URL HLS via Streamlink (sem anúncios).
     Se falhar, tenta usar yt-dlp como fallback.
     """
+    url = None
+
     # 1) Streamlink
     cmd_sl = [
         "streamlink",
@@ -30,34 +33,45 @@ def get_stream_url(channel: str) -> str | None:
         "--stream-url"
     ]
     try:
-        result = subprocess.run(cmd_sl, capture_output=True, text=True, timeout=30)
-        url = result.stdout.strip()
-        if result.returncode == 0 and url:
-            return url
-    except Exception:
-        pass
+        res = subprocess.run(cmd_sl, capture_output=True, text=True, timeout=60)
+        candidate = res.stdout.strip()
+        if res.returncode == 0 and candidate:
+            print(f"[{channel}] ▶️ Streamlink OK")
+            return candidate
+    except Exception as e:
+        print(f"[{channel}] ❌ Streamlink falhou: {e}")
 
     # 2) yt-dlp fallback
-    cmd_yd = ["yt-dlp", "--no-check-certificate", "-g", f"https://www.twitch.tv/{channel}"]
+    cmd_yd = [
+        "yt-dlp",
+        "--no-check-certificate",
+        "-g",
+        f"https://www.twitch.tv/{channel}"
+    ]
     try:
-        out = subprocess.check_output(cmd_yd, stderr=subprocess.DEVNULL, timeout=30)
-        return out.decode().strip()
-    except Exception:
-        return None
+        out = subprocess.check_output(cmd_yd, stderr=subprocess.DEVNULL, timeout=60)
+        url = out.decode().strip()
+        if url:
+            print(f"[{channel}] ▶️ yt-dlp OK")
+            return url
+    except Exception as e:
+        print(f"[{channel}] ❌ yt-dlp falhou: {e}")
+
+    return None
 
 def main():
-    m3u_lines = ["#EXTM3U"]
-    for name in sorted(STREAMERS):
-        url = get_stream_url(name)
+    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    lines = [f"#EXTM3U", f"# Gerado em {now}"]
+    for channel in sorted(STREAMERS, key=str.lower):
+        url = get_stream_url(channel)
         if url:
-            m3u_lines.append(f"#EXTINF:-1,{name}")
-            m3u_lines.append(url)
+            lines.append(f"#EXTINF:-1,{channel}")
+            lines.append(url)
         else:
-            print(f"[Aviso] Não foi possível obter stream para {name}. Pode estar offline.")
-    # Grava arquivo
+            print(f"[{channel}] ⚠️ offline ou indisponível")
     with open("playlist.m3u", "w", encoding="utf-8") as f:
-        f.write("\n".join(m3u_lines) + "\n")
-    print("✅ playlist.m3u gerada com sucesso.")
+        f.write("\n".join(lines) + "\n")
+    print("✅ playlist.m3u atualizada.")
 
 if __name__ == "__main__":
     main()
