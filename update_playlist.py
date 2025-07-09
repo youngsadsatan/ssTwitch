@@ -2,6 +2,7 @@
 import subprocess
 from datetime import datetime
 
+# Lista de streamers
 STREAMERS = [
     "alanzoka",
     "emiru",
@@ -26,16 +27,42 @@ STREAMERS = [
     "tioorochitwitch",
     "uma_pesada_familia_tv",
     "valkyrae",
-    "willneff"
+    "willneff",
 ]
+
+# Mapeamento de URLs de logo para cada streamer (tvg-logo)
+LOGOS = {
+    "alanzoka": "https://static-cdn.jtvnw.net/jtv_user_pictures/64d44235-1dee-4bca-95da-bee1ee96eea3-profile_image-150x150.png",
+    "emiru": "https://static-cdn.jtvnw.net/jtv_user_pictures/c9f74581-c0e8-4638-8629-51dbfe401335-profile_image-150x150.png",
+    "extraemily": "https://static-cdn.jtvnw.net/jtv_user_pictures/4d2f4f20-4dba-4866-8a41-542378cb7089-profile_image-150x150.png",
+    "familiadapesada_tv": "https://static-cdn.jtvnw.net/jtv_user_pictures/44d9c9a5-3386-4cfc-9c2d-cc47612e4f38-profile_image-150x150.png",
+    "gaules": "https://static-cdn.jtvnw.net/jtv_user_pictures/ea0fe422-84bd-4aee-9d10-fd4b0b3a7054-profile_image-150x150.png",
+    "hasanabi": "https://static-cdn.jtvnw.net/jtv_user_pictures/0347a9aa-e396-49a5-b0f1-31261704bab8-profile_image-150x150.jpeg",
+    "ijenz": "https://static-cdn.jtvnw.net/jtv_user_pictures/45fcecd7-6af2-4f8b-99db-088ba8ae41c0-profile_image-150x150.png",
+    "ijenzVOD": "https://static-cdn.jtvnw.net/jtv_user_pictures/f5a54cba-06eb-4353-ad9e-0f4cd4395ae8-profile_image-150x150.png",
+    "kaicenat": "https://static-cdn.jtvnw.net/jtv_user_pictures/bf6a04cf-3f44-4986-8eed-5c36bfad542b-profile_image-150x150.png",
+    "leanbeefpatty": "https://static-cdn.jtvnw.net/jtv_user_pictures/bea90797-d488-484a-bfa3-4a65e7060f89-profile_image-150x150.png",
+    "maya": "https://static-cdn.jtvnw.net/jtv_user_pictures/42b93509-a232-452f-ae01-2051ad6ab1fc-profile_image-150x150.png",
+    "mira004": "https://static-cdn.jtvnw.net/jtv_user_pictures/05b52b38-9ddf-4d79-a48c-adc4b262bf13-profile_image-150x150.png",
+    "mizkif": "https://static-cdn.jtvnw.net/jtv_user_pictures/ddd88d33-6c4f-424f-9246-5f4978c93148-profile_image-150x150.png",
+    "morgpie": "https://static-cdn.jtvnw.net/jtv_user_pictures/ade21f51-8837-47bb-93f5-66971cedf64f-profile_image-150x150.png",
+    "pinkchyu": "https://static-cdn.jtvnw.net/jtv_user_pictures/e896554d-b5ed-459d-ab5f-056a7f9d39a3-profile_image-150x150.png",
+    "pokimane": "https://static-cdn.jtvnw.net/jtv_user_pictures/912232e8-9e53-4fb7-aac4-14aed07869ca-profile_image-150x150.png",
+    "qtcinderella": "https://static-cdn.jtvnw.net/jtv_user_pictures/051f2eb6-fac4-4921-bf65-b87f2177939c-profile_image-150x150.png",
+    "sakurashymko": "https://static-cdn.jtvnw.net/jtv_user_pictures/4f49024a-2ad9-4de9-be80-ab31c94f29e7-profile_image-150x150.png",
+    "sofiaespanha": "https://static-cdn.jtvnw.net/jtv_user_pictures/c6eb5fa7-8c07-4daf-8101-fa9aa9320abf-profile_image-150x150.png",
+    "themajorityreport": "https://static-cdn.jtvnw.net/jtv_user_pictures/e2e7c912-49bf-4df3-bbe4-8ca66d6e8b95-profile_image-150x150.png",
+    "tioorochitwitch": "https://static-cdn.jtvnw.net/jtv_user_pictures/b99a08d2-29ab-4ff1-99eb-01246d41efb7-profile_image-150x150.png",
+    "uma_pesada_familia_tv": "https://static-cdn.jtvnw.net/jtv_user_pictures/1b7ac349-8de5-4536-90ee-03451205e3f8-profile_image-150x150.png",
+    "valkyrae": "https://static-cdn.jtvnw.net/jtv_user_pictures/a1507999-a5ea-4dd1-911c-63fc493894e6-profile_image-150x150.png",
+    "willneff": "https://static-cdn.jtvnw.net/jtv_user_pictures/0526935c-5783-4590-8dc1-16445842633d-profile_image-150x150.png",
+}
 
 def get_stream_url(channel: str) -> str | None:
     """
     Tenta obter a URL HLS via Streamlink (sem anúncios).
     Se falhar, tenta usar yt-dlp como fallback.
     """
-    url = None
-
     # 1) Streamlink
     cmd_sl = [
         "streamlink",
@@ -74,15 +101,22 @@ def get_stream_url(channel: str) -> str | None:
 def main():
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
     lines = [f"#EXTM3U", f"# Gerado em {now}"]
+
     for channel in sorted(STREAMERS, key=str.lower):
         url = get_stream_url(channel)
         if url:
-            lines.append(f"#EXTINF:-1,{channel}")
+            logo = LOGOS.get(channel)
+            if logo:
+                lines.append(f'#EXTINF:-1 tvg-logo="{logo}",{channel}')
+            else:
+                lines.append(f"#EXTINF:-1,{channel}")
             lines.append(url)
         else:
             print(f"[{channel}] ⚠️ offline ou indisponível")
+
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+
     print("✅ playlist.m3u atualizada.")
 
 if __name__ == "__main__":
