@@ -5,6 +5,7 @@ from datetime import datetime
 # Lista de streamers
 STREAMERS = [
     "alanzoka",
+    "bonnie",
     "emiru",
     "extraemily",
     "familiadapesada_tv",
@@ -33,6 +34,7 @@ STREAMERS = [
 # Mapeamento de URLs de logo para cada streamer (tvg-logo)
 LOGOS = {
     "alanzoka": "https://static-cdn.jtvnw.net/jtv_user_pictures/64d44235-1dee-4bca-95da-bee1ee96eea3-profile_image-150x150.png",
+    "bonnie": "https://static-cdn.jtvnw.net/jtv_user_pictures/11e54a1b-a08e-4bf8-9169-a4470c3e545c-profile_image-150x150.png",
     "emiru": "https://static-cdn.jtvnw.net/jtv_user_pictures/c9f74581-c0e8-4638-8629-51dbfe401335-profile_image-150x150.png",
     "extraemily": "https://static-cdn.jtvnw.net/jtv_user_pictures/4d2f4f20-4dba-4866-8a41-542378cb7089-profile_image-150x150.png",
     "familiadapesada_tv": "https://static-cdn.jtvnw.net/jtv_user_pictures/44d9c9a5-3386-4cfc-9c2d-cc47612e4f38-profile_image-150x150.png",
