@@ -2,10 +2,12 @@
 import subprocess
 from datetime import datetime
 
-# Lista de streamers
+# Streamers List
 STREAMERS = [
     "alanzoka",
+    "austinshow",
     "bonnie",
+    "cinna",
     "emiru",
     "extraemily",
     "familiadapesada_tv",
@@ -25,16 +27,19 @@ STREAMERS = [
     "sakurashymko",
     "sofiaespanha",
     "themajorityreport",
+    "tinakitten",
     "tioorochitwitch",
     "uma_pesada_familia_tv",
     "valkyrae",
     "willneff",
 ]
 
-# Mapeamento de URLs de logo para cada streamer (tvg-logo)
+# Maping the URLs Logos to Streamers channel (tvg-logo)
 LOGOS = {
     "alanzoka": "https://static-cdn.jtvnw.net/jtv_user_pictures/64d44235-1dee-4bca-95da-bee1ee96eea3-profile_image-150x150.png",
+    "austinshow": "https://static-cdn.jtvnw.net/jtv_user_pictures/9e894c05-6131-4414-bf01-a65e9f88b13a-profile_image-150x150.png",
     "bonnie": "https://static-cdn.jtvnw.net/jtv_user_pictures/11e54a1b-a08e-4bf8-9169-a4470c3e545c-profile_image-150x150.png",
+    "cinna": "https://static-cdn.jtvnw.net/jtv_user_pictures/f4e390c8-8f48-4081-b605-475b344fd3aa-profile_image-150x150.png",
     "emiru": "https://static-cdn.jtvnw.net/jtv_user_pictures/c9f74581-c0e8-4638-8629-51dbfe401335-profile_image-150x150.png",
     "extraemily": "https://static-cdn.jtvnw.net/jtv_user_pictures/4d2f4f20-4dba-4866-8a41-542378cb7089-profile_image-150x150.png",
     "familiadapesada_tv": "https://static-cdn.jtvnw.net/jtv_user_pictures/44d9c9a5-3386-4cfc-9c2d-cc47612e4f38-profile_image-150x150.png",
@@ -54,6 +59,7 @@ LOGOS = {
     "sakurashymko": "https://static-cdn.jtvnw.net/jtv_user_pictures/4f49024a-2ad9-4de9-be80-ab31c94f29e7-profile_image-150x150.png",
     "sofiaespanha": "https://static-cdn.jtvnw.net/jtv_user_pictures/c6eb5fa7-8c07-4daf-8101-fa9aa9320abf-profile_image-150x150.png",
     "themajorityreport": "https://static-cdn.jtvnw.net/jtv_user_pictures/e2e7c912-49bf-4df3-bbe4-8ca66d6e8b95-profile_image-150x150.png",
+    "tinakitten": "https://static-cdn.jtvnw.net/jtv_user_pictures/4eadab7a-eb89-4205-b89f-6da0b2c2bf36-profile_image-150x150.png",
     "tioorochitwitch": "https://static-cdn.jtvnw.net/jtv_user_pictures/b99a08d2-29ab-4ff1-99eb-01246d41efb7-profile_image-150x150.png",
     "uma_pesada_familia_tv": "https://static-cdn.jtvnw.net/jtv_user_pictures/1b7ac349-8de5-4536-90ee-03451205e3f8-profile_image-150x150.png",
     "valkyrae": "https://static-cdn.jtvnw.net/jtv_user_pictures/a1507999-a5ea-4dd1-911c-63fc493894e6-profile_image-150x150.png",
