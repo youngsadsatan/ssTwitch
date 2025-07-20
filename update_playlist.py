@@ -83,10 +83,10 @@ def get_stream_url(channel: str) -> str | None:
         res = subprocess.run(cmd_sl, capture_output=True, text=True, timeout=60)
         candidate = res.stdout.strip()
         if res.returncode == 0 and candidate:
-            print(f"[{channel}] ▶️ Streamlink OK")
+            print(f"[{channel}] ✅ Streamlink OK")
             return candidate
     except Exception as e:
-        print(f"[{channel}] ❌ Streamlink falhou: {e}")
+        print(f"[{channel}] ❌ Streamlink Failed: {e}")
 
     # 2) yt-dlp fallback
     cmd_yd = [
@@ -99,10 +99,10 @@ def get_stream_url(channel: str) -> str | None:
         out = subprocess.check_output(cmd_yd, stderr=subprocess.DEVNULL, timeout=60)
         url = out.decode().strip()
         if url:
-            print(f"[{channel}] ▶️ yt-dlp OK")
+            print(f"[{channel}] ✅ yt-dlp OK")
             return url
     except Exception as e:
-        print(f"[{channel}] ❌ yt-dlp falhou: {e}")
+        print(f"[{channel}] ❌ yt-dlp Failed: {e}")
 
     return None
 
@@ -120,7 +120,7 @@ def main():
                 lines.append(f"#EXTINF:-1,{channel}")
             lines.append(url)
         else:
-            print(f"[{channel}] ⚠️ offline ou indisponível")
+            print(f"[{channel}] ⚠️ Offline or Unavailable")
 
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
