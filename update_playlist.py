@@ -11,7 +11,6 @@ STREAMERS = [
     "cinna",
     "emiru",
     "extraemily",
-    "familiadapesada_tv",
     "gaules",
     "hasanabi",
     "ijenz",
