@@ -16,10 +16,16 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.14'
 
       - name: Instalar dependências
-        run: pip install streamlink yt-dlp
+        run: pip install -U streamlink yt-dlp
+
+      - name: Mostrar versões (debug)
+        run: |
+          python --version
+          streamlink --version
+          yt-dlp --version
 
       - name: Gerar playlist
         run: python update_playlist.py
