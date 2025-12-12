@@ -78,7 +78,7 @@ def get_stream_url(channel: str) -> str | None:
         "streamlink",
         f"https://www.twitch.tv/{channel}",
         "best",
-        "--twitch-disable-ads",
+        "--twitch-supported-codecs", "h264,h265,av1",
         "--stream-url"
     ]
     try:
