@@ -32,6 +32,7 @@ STREAMERS = [
     "tinakitten",
     "tioorochitwitch",
     "valkyrae",
+    "vinicin_lil",
     "willneff",
 ]
 
@@ -65,6 +66,7 @@ LOGOS = {
     "tinakitten": "https://static-cdn.jtvnw.net/jtv_user_pictures/4eadab7a-eb89-4205-b89f-6da0b2c2bf36-profile_image-150x150.png",
     "tioorochitwitch": "https://static-cdn.jtvnw.net/jtv_user_pictures/b99a08d2-29ab-4ff1-99eb-01246d41efb7-profile_image-150x150.png",
     "valkyrae": "https://static-cdn.jtvnw.net/jtv_user_pictures/a1507999-a5ea-4dd1-911c-63fc493894e6-profile_image-150x150.png",
+    "vinicin_lil": "https://static-cdn.jtvnw.net/jtv_user_pictures/7ac478dc-cd12-4ee3-9836-5e4b51877602-profile_image-150x150.png",
     "willneff": "https://static-cdn.jtvnw.net/jtv_user_pictures/0526935c-5783-4590-8dc1-16445842633d-profile_image-150x150.png",
 }
 
