@@ -107,7 +107,7 @@ def get_stream_url(channel: str) -> str | None:
     return None
 
 def main():
-    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    now = datetime.utcnow().strftime("%d-%m-%Y %H:%M UTC")
     lines = [f"#EXTM3U", f"# Gerado em {now}"]
 
     for channel in sorted(STREAMERS, key=str.lower):
