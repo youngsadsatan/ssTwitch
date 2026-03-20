@@ -28,7 +28,7 @@ jobs:
           yt-dlp --version
 
       - name: Gerar playlist
-        run: python update_playlist.py
+        run: python playlist.py
 
       - name: Preparar diretório para Pages
         run: |
