@@ -11,12 +11,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Força o uso do Node.js 24 para evitar depreciação
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: '3.14'   # mantido como no original
 
       - name: Instalar dependências
         run: pip install -U streamlink yt-dlp
