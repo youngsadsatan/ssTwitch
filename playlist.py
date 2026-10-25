@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Streamers' list
 STREAMERS = [
@@ -99,7 +99,7 @@ def get_stream_url(channel: str) -> str | None:
 
 def main():
     # Formato brasileiro: DD/MM/AAAA HH:MM:SS (UTC -3) – timezone-aware
-    now = datetime.now(datetime.UTC).strftime("%d/%m/%Y %H:%M:%S")
+    now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
     lines = [f"#EXTM3U", f"# Gerado em {now} UTC"]
 
     for channel in sorted(STREAMERS, key=str.lower):
