@@ -2,7 +2,7 @@
 import subprocess
 from datetime import datetime
 
-# Streamers List
+# Streamers' list
 STREAMERS = [
     "alanzoka",
     "austinshow",
@@ -35,7 +35,7 @@ STREAMERS = [
     "willneff",
 ]
 
-# Maping the URLs Logos to Streamers channel (tvg-logo)
+# URLs logos to Streamers' channel (tvg-logo)
 LOGOS = {
     "alanzoka": "https://static-cdn.jtvnw.net/jtv_user_pictures/64d44235-1dee-4bca-95da-bee1ee96eea3-profile_image-150x150.png",
     "austinshow": "https://static-cdn.jtvnw.net/jtv_user_pictures/9e894c05-6131-4414-bf01-a65e9f88b13a-profile_image-150x150.png",
@@ -70,15 +70,14 @@ LOGOS = {
 
 def get_stream_url(channel: str) -> str | None:
     """
-    Tenta obter a URL HLS via Streamlink (sem anúncios).
-    Se falhar, tenta usar yt-dlp como fallback.
+    Pega a URL HLS através do Streamlink com o modo de baixa latência ativado.
     """
-    # 1) Streamlink
     cmd_sl = [
         "streamlink",
         f"https://www.twitch.tv/{channel}",
         "best",
         "--twitch-supported-codecs", "h264,h265,av1",
+        "--twitch-low-latency",       # prefetch de segmentos + live-edge reduzido
         "--stream-url"
     ]
     try:
@@ -87,30 +86,16 @@ def get_stream_url(channel: str) -> str | None:
         if res.returncode == 0 and candidate:
             print(f"[{channel}] ✅ Streamlink OK")
             return candidate
+        else:
+            print(f"[{channel}] ⚠️ Streamlink retornou o código {res.returncode}")
     except Exception as e:
         print(f"[{channel}] ❌ Streamlink Failed: {e}")
-
-    # 2) yt-dlp fallback
-    cmd_yd = [
-        "yt-dlp",
-        "--no-check-certificate",
-        "-g",
-        f"https://www.twitch.tv/{channel}"
-    ]
-    try:
-        out = subprocess.check_output(cmd_yd, stderr=subprocess.DEVNULL, timeout=60)
-        url = out.decode().strip()
-        if url:
-            print(f"[{channel}] ✅ yt-dlp OK")
-            return url
-    except Exception as e:
-        print(f"[{channel}] ❌ yt-dlp Failed: {e}")
 
     return None
 
 def main():
-    # Formato brasileiro: DD/MM/AAAA HH:MM:SS (UTC)
-    now = datetime.utcnow().strftime("%d/%m/%Y %H:%M:%S")
+    # Formato brasileiro: DD/MM/AAAA HH:MM:SS (UTC -3) – timezone-aware
+    now = datetime.now(datetime.UTC).strftime("%d/%m/%Y %H:%M:%S")
     lines = [f"#EXTM3U", f"# Gerado em {now} UTC"]
 
     for channel in sorted(STREAMERS, key=str.lower):
@@ -128,7 +113,7 @@ def main():
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
-    print("✅ playlist.m3u atualizada.")
+    print("✅ playlist .m3u atualizada.")
 
 if __name__ == "__main__":
     main()
